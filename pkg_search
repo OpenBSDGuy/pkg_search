@@ -1,0 +1,81 @@
+#!/bin/sh
+
+main() {
+    set_screen_variables
+
+    parse_arguments "$@"
+
+    check_dependencies
+    
+    selection=$(pkglocate '*' | cut -d ':' -f1 | uniq | fzf -e --query "$keyword")
+    
+    if [ "--info" = "$info" ] || [ "-i" == "$info" ]; then
+        pkg_info -q "$selection"
+    else
+        echo "$selection"
+    fi
+}
+
+check_dependencies() {
+    if ! command -v pkglocate > /dev/null; then
+        echo -n "${bold}${yellow}Warning:${no_color} "
+        echo "missing ${bold}${italic}pkglocatedb${no_color} dependency"
+        echo "${bold}Run:${no_color} ${under_score}doas pkg_add pkglocatedb${no_color}"
+        exit 1
+    fi
+
+    if ! command -v fzf > /dev/null ; then
+        echo -n "${bold}${yellow}Warning:${no_color} "
+        echo "missing ${bold}${italic}fzf${no_color} dependency"
+        echo "${bold}Run:${no_color} ${under_score}doas pkg_add fzf${no_color}"
+        exit 1
+   fi
+}
+
+parse_arguments() {
+    if [ "--help" = "$1" ] || [ "-h" = "$1" ]; then
+        print_help
+        exit 0
+    fi
+    if [ "$#" -eq 0 ]; then
+        keyword=""
+        info=""
+    elif [ "$#" -eq 1 ]; then
+        if [ "--info" == "$1" ] || [ "-i" == "$1" ]; then
+            info="$1"
+            keyword=""
+        else
+            keyword="$1"
+            info=""
+        fi
+    elif [ "$#" -ge 2 ]; then
+        keyword="$2"
+        info="$1"
+    fi
+}
+
+print_help() {
+    echo "${bold}${green}pkg_search${no_color} - interactive search for OpenBSD packages"
+    echo ""
+    echo "${tab}${italic}-i${no_color} or ${italic}--info${no_color} get information about the selected package "
+    echo "${tab}${italic}-h${no_color} or ${italic}--help${no_color} print this help"    
+    echo ""
+    echo "${two_space}${bold}NOTE:${no_color} make sure to have following packages installed:"
+    echo "${two_space}${tab}${bold}* pkglocatedb${no_color} -- ${under_score}doas pkg_add pkglocatedb${no_color}"
+    echo "${two_space}${tab}${bold}* fzf${no_color} -- ${under_score}doas pkg_add fzf${no_color}"
+    echo ""
+}
+
+set_screen_variables() {
+    no_color="\033[0m"
+    red="\033[38;5;160m"
+    yellow="\033[38;5;226m"
+    green="\033[38;5;119m"
+    bold="\033[1m"
+    under_score="\033[4m"
+    italic="\033[3m"
+    two_space="  "
+    tab="    "
+}
+
+main "$@"
