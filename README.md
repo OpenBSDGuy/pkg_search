@@ -1,2 +1,3 @@
 # pkg_search
-Blazing fast intutive search for OpenBSD packages
+
+Blazing fast intutive search for OpenBSD packages.
