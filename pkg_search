@@ -10,9 +10,9 @@ main() {
     selection=$(pkglocate '*' | cut -d ':' -f1 | uniq | fzf -e --query "$keyword")
     
     if [ "--info" = "$info" ] || [ "-i" == "$info" ]; then
-        pkg_info -q "$selection"
+        [ ! -z "$selection" ] && pkg_info -q "$selection"
     else
-        echo "$selection"
+        [ ! -z "$selection" ] && echo "$selection"
     fi
 }
 
