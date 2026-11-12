@@ -7,7 +7,8 @@ main() {
 
     check_dependencies
     
-    selection=$(pkglocate '*' | cut -d ':' -f1 | uniq | fzf -e --query "$keyword")
+    selection=$(pkglocate '*' | cut -d ':' -f1 | uniq | fzf -e --height=50% --reverse --border \
+        --header="enter: select | esc: cancel" --prompt="package> " --query "$keyword")
     
     if [ "--info" = "$info" ] || [ "-i" == "$info" ]; then
         [ ! -z "$selection" ] && pkg_info -q "$selection"
