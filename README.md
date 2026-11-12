@@ -3,7 +3,7 @@
 Blazing fast intuitive search for OpenBSD packages.
 
 <p align="center">
-  <img width="600" height="282" src="https://github.com/OpenBSDGuy/pkg_search/raw/master/assets/screenshot.png">
+  <img width="600" height="282" src="https://raw.githubusercontent.com/OpenBSDGuy/pkg_search/refs/heads/master/assets/screenshot.png">
 </p>
 
 ## Dependencies
